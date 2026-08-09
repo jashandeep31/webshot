@@ -105,7 +105,7 @@ function drawBackground(context: CanvasRenderingContext2D, state: EditorState) {
   })
 }
 
-export async function exportPng(state: EditorState, image: HTMLImageElement) {
+async function renderPng(state: EditorState, image: HTMLImageElement) {
   const exportScale = 2
   const canvas = document.createElement("canvas")
   canvas.width = state.canvas.width * exportScale
@@ -140,6 +140,19 @@ export async function exportPng(state: EditorState, image: HTMLImageElement) {
 
   const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"))
   if (!blob) throw new Error("The browser could not encode this image.")
+  return blob
+}
+
+export async function copyPng(state: EditorState, image: HTMLImageElement) {
+  if (!navigator.clipboard?.write || typeof ClipboardItem === "undefined") {
+    throw new Error("Image copying is not supported by this browser.")
+  }
+  const blob = await renderPng(state, image)
+  await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })])
+}
+
+export async function exportPng(state: EditorState, image: HTMLImageElement) {
+  const blob = await renderPng(state, image)
 
   const stamp = new Date().toISOString().replace(/[-:]/g, "").replace("T", "-").slice(0, 15)
   const url = URL.createObjectURL(blob)

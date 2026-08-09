@@ -1,12 +1,13 @@
 "use client"
 
-import { Download, ImagePlus, Redo2, RotateCcw, Sparkles, Undo2, Upload } from "lucide-react"
+import { Copy, Download, ImagePlus, Redo2, RotateCcw, ScanLine, Sparkles, Undo2, Upload } from "lucide-react"
 import { type ChangeEvent, type DragEvent, useEffect, useReducer, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { ImageEditorDialog } from "@/components/editor/image-editor-dialog"
 import { ASPECT_RATIOS, createDefaultState, GRADIENTS, PATTERNS } from "@/lib/editor/defaults"
 import { getCanvasSize, getScreenshotRect } from "@/lib/editor/geometry"
-import { exportPng } from "@/lib/editor/render-export"
+import { copyPng, exportPng } from "@/lib/editor/render-export"
 import type { EditorState, ImageSource, ShadowPreset } from "@/lib/editor/types"
 
 type History = { past: EditorState[]; present: EditorState; future: EditorState[] }
@@ -78,6 +79,8 @@ export function ScreenshotEditor() {
   const [status, setStatus] = useState("Add a screenshot to begin")
   const [isDragging, setIsDragging] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
+  const [isCopying, setIsCopying] = useState(false)
+  const [isImageEditorOpen, setIsImageEditorOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const sourceRef = useRef<ImageSource | null>(null)
@@ -143,6 +146,28 @@ export function ScreenshotEditor() {
     loadFile(event.dataTransfer.files[0])
   }
 
+  function applyImageEdits(blob: Blob, width: number, height: number) {
+    const url = URL.createObjectURL(blob)
+    if (sourceRef.current) URL.revokeObjectURL(sourceRef.current.url)
+    const name = source?.name.replace(/\.[^.]+$/, "-edited.png") ?? "edited-screenshot.png"
+    const size = getCanvasSize(width, height, state.canvas.aspectRatio)
+    setSource({ url, width, height, name })
+    dispatch({
+      type: "set",
+      state: {
+        ...state,
+        canvas: {
+          ...state.canvas,
+          ...size,
+          padding: Math.min(state.canvas.padding, Math.round(Math.min(size.width, size.height) * 0.35)),
+        },
+      },
+    })
+    setIsImageEditorOpen(false)
+    setError("")
+    setStatus("Crop and blur changes applied")
+  }
+
   function setAspectRatio(aspectRatio: EditorState["canvas"]["aspectRatio"]) {
     if (!source) return
     const size = getCanvasSize(source.width, source.height, aspectRatio)
@@ -167,6 +192,20 @@ export function ScreenshotEditor() {
       setError(exportError instanceof Error ? exportError.message : "Export failed.")
     } finally {
       setIsExporting(false)
+    }
+  }
+
+  async function handleCopy() {
+    if (!imageRef.current) return
+    setIsCopying(true)
+    try {
+      await copyPng(state, imageRef.current)
+      setError("")
+      setStatus("Image copied to clipboard")
+    } catch (copyError) {
+      setError(copyError instanceof Error ? copyError.message : "Copy failed.")
+    } finally {
+      setIsCopying(false)
     }
   }
 
@@ -196,7 +235,8 @@ export function ScreenshotEditor() {
           <Button aria-label="Undo" title="Undo" variant="ghost" size="icon" disabled={!history.past.length} onClick={() => dispatch({ type: "undo" })}><Undo2 /></Button>
           <Button aria-label="Redo" title="Redo" variant="ghost" size="icon" disabled={!history.future.length} onClick={() => dispatch({ type: "redo" })}><Redo2 /></Button>
           <Button variant="ghost" className="hidden sm:flex" onClick={() => dispatch({ type: "reset", state: createDefaultState(state.canvas.width, state.canvas.height) })}><RotateCcw /> Reset</Button>
-          <Button className="ml-2 bg-violet-500 hover:bg-violet-400" disabled={!source || isExporting} onClick={handleExport}><Download /> {isExporting ? "Exporting" : "Export PNG"}</Button>
+          <Button aria-label="Copy image" title="Copy image" className="ml-2 bg-violet-500 hover:bg-violet-400" size="icon" disabled={!source || isCopying || isExporting} onClick={handleCopy}><Copy /></Button>
+          <Button aria-label="Export PNG" title="Export PNG" className="bg-violet-500 hover:bg-violet-400" size="icon" disabled={!source || isExporting || isCopying} onClick={handleExport}><Download /></Button>
         </div>
       </header>
 
@@ -230,7 +270,10 @@ export function ScreenshotEditor() {
                   style={screenshotStyle}
                 />
               </div>
-              <button className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-black/65 px-3 py-1.5 text-xs text-zinc-300 backdrop-blur hover:bg-black/80" onClick={() => fileInputRef.current?.click()}>Replace image</button>
+              <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
+                <button className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-violet-300/25 bg-violet-500/85 px-3 py-1.5 text-xs font-medium text-white shadow-lg backdrop-blur hover:bg-violet-400" onClick={() => setIsImageEditorOpen(true)}><ScanLine className="size-3.5" /> Crop &amp; blur</button>
+                <button className="whitespace-nowrap rounded-full border border-white/10 bg-black/65 px-3 py-1.5 text-xs text-zinc-300 backdrop-blur hover:bg-black/80" onClick={() => fileInputRef.current?.click()}>Replace image</button>
+              </div>
             </div>
           ) : (
             <button className="group relative z-10 flex w-full max-w-lg flex-col items-center rounded-[2rem] border border-dashed border-white/15 bg-white/[.025] px-8 py-16 text-center transition hover:border-violet-400/50 hover:bg-violet-500/[.04] focus-visible:outline-2 focus-visible:outline-violet-400 sm:py-24" onClick={() => fileInputRef.current?.click()}>
@@ -304,6 +347,7 @@ export function ScreenshotEditor() {
       </div>
 
       <input ref={fileInputRef} className="sr-only" type="file" accept="image/png,image/jpeg,image/webp" onChange={onFileChange} />
+      {source && isImageEditorOpen && <ImageEditorDialog source={source} onClose={() => setIsImageEditorOpen(false)} onApply={applyImageEdits} />}
       <div className="sr-only" aria-live="polite">{error || status}</div>
       {error && <button className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-xl border border-red-400/20 bg-red-950/90 px-4 py-3 text-sm text-red-100 shadow-2xl" onClick={() => setError("")}>{error}</button>}
     </main>

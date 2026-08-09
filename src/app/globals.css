@@ -123,8 +123,43 @@
   }
   body {
     @apply bg-background text-foreground;
+    margin: 0;
   }
   html {
     @apply font-sans;
+  }
+}
+
+.editor-range {
+  height: 18px;
+  cursor: pointer;
+}
+
+.editor-range::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 12%);
+}
+
+.editor-range::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  margin-top: -5.5px;
+  appearance: none;
+  border: 3px solid #8b5cf6;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgb(139 92 246 / 15%);
+}
+
+.editor-range:focus-visible {
+  outline: 2px solid #a78bfa;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

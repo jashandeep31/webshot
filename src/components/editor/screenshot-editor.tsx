@@ -220,7 +220,7 @@ export function ScreenshotEditor() {
   } : undefined
 
   return (
-    <main className="flex min-h-dvh flex-col bg-black text-zinc-100">
+    <main className="flex h-dvh flex-col overflow-hidden bg-black text-zinc-100">
       <header className="flex h-16 shrink-0 items-center justify-between border-b border-white/10 bg-black px-4 sm:px-6">
         <div className="flex items-center gap-3">
           <div className="grid size-8 place-items-center rounded-lg border border-white/15 bg-white text-black shadow-[0_0_24px_rgba(255,255,255,.08)]">
@@ -240,7 +240,7 @@ export function ScreenshotEditor() {
         </div>
       </header>
 
-      <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,auto)_minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_320px] lg:grid-rows-[minmax(0,1fr)]">
         <section
           className={`relative flex min-h-[52vh] items-center justify-center overflow-hidden p-5 sm:p-10 lg:min-h-0 ${isDragging ? "bg-white/[.04]" : ""}`}
           onDragEnter={(event) => { event.preventDefault(); setIsDragging(true) }}
@@ -286,7 +286,7 @@ export function ScreenshotEditor() {
           {isDragging && <div className="pointer-events-none absolute inset-4 z-20 grid place-items-center rounded-3xl border-2 border-dashed border-white/70 bg-white/[.06] text-sm font-medium">Drop to add screenshot</div>}
         </section>
 
-        <aside className="relative z-30 overflow-y-auto border-t border-white/10 bg-[#0a0a0a] lg:border-t-0 lg:border-l">
+        <aside className="relative z-30 min-h-0 overflow-y-auto border-t border-white/10 bg-[#0a0a0a] lg:border-t-0 lg:border-l">
           <div className="space-y-7 p-5 sm:p-6">
             <ControlSection title="Canvas" eyebrow={`${state.canvas.width} x ${state.canvas.height}`}>
               <div className="grid grid-cols-5 gap-1 rounded-xl bg-black/25 p-1">

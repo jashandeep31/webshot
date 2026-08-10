@@ -146,15 +146,30 @@
   height: 14px;
   margin-top: -5.5px;
   appearance: none;
-  border: 3px solid #8b5cf6;
+  border: 3px solid #fff;
   border-radius: 999px;
   background: #fff;
-  box-shadow: 0 0 0 3px rgb(139 92 246 / 15%);
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 12%);
 }
 
 .editor-range:focus-visible {
-  outline: 2px solid #a78bfa;
+  outline: 2px solid #fff;
   outline-offset: 3px;
+}
+
+.editor-range::-moz-range-track {
+  height: 3px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 12%);
+}
+
+.editor-range::-moz-range-thumb {
+  width: 8px;
+  height: 8px;
+  border: 3px solid #fff;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 12%);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -152,7 +152,7 @@ export function ImageEditorDialog({ source, onClose, onApply }: {
       <Dialog.Portal>
         <Dialog.Backdrop className="fixed inset-0 z-50 min-h-dvh bg-black/80 backdrop-blur-sm transition-opacity data-ending-style:opacity-0 data-starting-style:opacity-0" />
         <Dialog.Viewport className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-3 sm:p-6">
-          <Dialog.Popup className="flex max-h-[calc(100dvh-1.5rem)] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#131316] text-zinc-100 shadow-2xl transition data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0 sm:max-h-[calc(100dvh-3rem)]">
+          <Dialog.Popup className="flex max-h-[calc(100dvh-1.5rem)] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-white/15 bg-[#0a0a0a] text-zinc-100 shadow-2xl transition data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0 sm:max-h-[calc(100dvh-3rem)]">
             <header className="flex shrink-0 items-start justify-between gap-4 border-b border-white/8 px-4 py-3 sm:px-5">
               <div>
                 <Dialog.Title className="text-sm font-semibold">Crop and hide details</Dialog.Title>
@@ -162,7 +162,7 @@ export function ImageEditorDialog({ source, onClose, onApply }: {
             </header>
 
             <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-              <div className="relative h-[38dvh] min-h-56 shrink-0 overflow-hidden bg-[#09090b] p-3 lg:h-auto lg:min-h-0 lg:flex-1 lg:p-6">
+              <div className="relative h-[38dvh] min-h-56 shrink-0 overflow-hidden bg-black p-3 lg:h-auto lg:min-h-0 lg:flex-1 lg:p-6">
                 <div
                   ref={workspaceRef}
                   role="img"
@@ -182,7 +182,7 @@ export function ImageEditorDialog({ source, onClose, onApply }: {
                     {[...blurRects, ...(tool === "blur" && draftRect ? [draftRect] : [])].map((rect, index) => <span key={`${index}-${rect.x}-${rect.y}`} className="pointer-events-none absolute border border-white/25 bg-white/5 backdrop-blur-md" style={{ left: `${(rect.x / source.width) * 100}%`, top: `${(rect.y / source.height) * 100}%`, width: `${(rect.width / source.width) * 100}%`, height: `${(rect.height / source.height) * 100}%` }} />)}
                     <svg className="pointer-events-none absolute inset-0 size-full" viewBox={`0 0 ${source.width} ${source.height}`} preserveAspectRatio="none" aria-hidden="true">
                       <path d={cropPath} fill="rgba(7, 7, 10, .68)" fillRule="evenodd" />
-                      <rect x={activeCrop.x} y={activeCrop.y} width={activeCrop.width} height={activeCrop.height} fill="none" stroke="#a78bfa" strokeWidth="2" strokeDasharray="8 5" vectorEffect="non-scaling-stroke" />
+                      <rect x={activeCrop.x} y={activeCrop.y} width={activeCrop.width} height={activeCrop.height} fill="none" stroke="#ffffff" strokeWidth="2" strokeDasharray="8 5" vectorEffect="non-scaling-stroke" />
                     </svg>
                   </div>}
                 </div>
@@ -191,12 +191,12 @@ export function ImageEditorDialog({ source, onClose, onApply }: {
 
               <aside className="w-full shrink-0 border-t border-white/8 p-4 lg:w-64 lg:border-t-0 lg:border-l lg:p-5">
                 <div className="grid grid-cols-2 gap-2">
-                  <button className={`rounded-xl border px-3 py-3 text-left transition ${tool === "crop" ? "border-violet-400 bg-violet-500/15 text-white" : "border-white/10 text-zinc-400 hover:border-white/20"}`} onClick={() => setTool("crop")}><Crop className="mb-2 size-4" /><span className="block text-xs font-medium">Crop</span></button>
-                  <button className={`rounded-xl border px-3 py-3 text-left transition ${tool === "blur" ? "border-violet-400 bg-violet-500/15 text-white" : "border-white/10 text-zinc-400 hover:border-white/20"}`} onClick={() => setTool("blur")}><Droplets className="mb-2 size-4" /><span className="block text-xs font-medium">Blur</span></button>
+                  <button className={`rounded-xl border px-3 py-3 text-left transition ${tool === "crop" ? "border-white bg-white/10 text-white" : "border-white/10 text-zinc-400 hover:border-white/20"}`} onClick={() => setTool("crop")}><Crop className="mb-2 size-4" /><span className="block text-xs font-medium">Crop</span></button>
+                  <button className={`rounded-xl border px-3 py-3 text-left transition ${tool === "blur" ? "border-white bg-white/10 text-white" : "border-white/10 text-zinc-400 hover:border-white/20"}`} onClick={() => setTool("blur")}><Droplets className="mb-2 size-4" /><span className="block text-xs font-medium">Blur</span></button>
                 </div>
                 <p className="mt-4 text-xs leading-5 text-zinc-500">{tool === "crop" ? "The full image is shown. Drag across it to select the area to keep." : "Drag a box over each name, email, or other detail you want hidden."}</p>
 
-                {tool === "blur" && <label className="mt-5 block space-y-2"><span className="flex justify-between text-xs text-zinc-400"><span>Blur strength</span><span className="font-mono text-zinc-500">{blurStrength}px</span></span><input className="editor-range w-full accent-violet-500" type="range" min={6} max={40} value={blurStrength} onChange={(event) => setBlurStrength(Number(event.target.value))} /></label>}
+                {tool === "blur" && <label className="mt-5 block space-y-2"><span className="flex justify-between text-xs text-zinc-400"><span>Blur strength</span><span className="font-mono text-zinc-500">{blurStrength}px</span></span><input className="editor-range w-full accent-white" type="range" min={6} max={40} value={blurStrength} onChange={(event) => setBlurStrength(Number(event.target.value))} /></label>}
 
                 <div className="mt-5 flex flex-wrap gap-2">
                   <Button variant="ghost" size="sm" disabled={!blurRects.length} onClick={() => setBlurRects((current) => current.slice(0, -1))}><Undo2 /> Undo blur</Button>
@@ -209,7 +209,7 @@ export function ImageEditorDialog({ source, onClose, onApply }: {
             <footer className="flex shrink-0 items-center justify-end gap-2 border-t border-white/8 px-4 py-3 sm:px-5">
               {error && <span className="mr-auto text-xs text-red-300" role="alert">{error}</span>}
               <Dialog.Close render={<Button variant="ghost" />}>Cancel</Dialog.Close>
-              <Button className="bg-violet-500 hover:bg-violet-400" disabled={!imageReady || isApplying} onClick={applyEdits}>{isApplying ? "Applying..." : "Apply changes"}</Button>
+              <Button className="bg-white text-black hover:bg-zinc-200" disabled={!imageReady || isApplying} onClick={applyEdits}>{isApplying ? "Applying..." : "Apply changes"}</Button>
             </footer>
           </Dialog.Popup>
         </Dialog.Viewport>

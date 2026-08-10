@@ -220,10 +220,10 @@ export function ScreenshotEditor() {
   } : undefined
 
   return (
-    <main className="flex h-dvh flex-col overflow-hidden bg-black text-zinc-100">
-      <header className="flex h-16 shrink-0 items-center justify-between border-b border-white/10 bg-black px-4 sm:px-6">
+    <main className="flex min-h-dvh flex-col bg-zinc-50 text-zinc-900 lg:h-dvh lg:overflow-hidden">
+      <header className="flex h-16 shrink-0 items-center justify-between border-b border-zinc-200 bg-white px-4 sm:px-6">
         <div className="flex items-center gap-3">
-          <div className="grid size-8 place-items-center rounded-lg border border-white/15 bg-white text-black shadow-[0_0_24px_rgba(255,255,255,.08)]">
+          <div className="grid size-8 place-items-center rounded-lg border border-red-200 bg-red-50 text-red-600 shadow-sm">
             <Triangle className="size-3.5 fill-current" />
           </div>
           <div>
@@ -235,20 +235,20 @@ export function ScreenshotEditor() {
           <Button aria-label="Undo" title="Undo" variant="ghost" size="icon" disabled={!history.past.length} onClick={() => dispatch({ type: "undo" })}><Undo2 /></Button>
           <Button aria-label="Redo" title="Redo" variant="ghost" size="icon" disabled={!history.future.length} onClick={() => dispatch({ type: "redo" })}><Redo2 /></Button>
           <Button variant="ghost" className="hidden sm:flex" onClick={() => dispatch({ type: "reset", state: createDefaultState(state.canvas.width, state.canvas.height) })}><RotateCcw /> Reset</Button>
-          <Button aria-label="Copy image" title="Copy image" className="ml-2 bg-white text-black hover:bg-zinc-200" size="icon" disabled={!source || isCopying || isExporting} onClick={handleCopy}><Copy /></Button>
-          <Button aria-label="Export PNG" title="Export PNG" className="bg-white text-black hover:bg-zinc-200" size="icon" disabled={!source || isExporting || isCopying} onClick={handleExport}><Download /></Button>
+          <Button aria-label="Copy image" title="Copy image" className="ml-2" size="icon" disabled={!source || isCopying || isExporting} onClick={handleCopy}><Copy /></Button>
+          <Button aria-label="Export PNG" title="Export PNG" size="icon" disabled={!source || isExporting || isCopying} onClick={handleExport}><Download /></Button>
         </div>
       </header>
 
-      <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,auto)_minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_320px] lg:grid-rows-[minmax(0,1fr)]">
+      <div className="grid flex-1 lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_320px] lg:grid-rows-[minmax(0,1fr)]">
         <section
-          className={`relative flex min-h-[52vh] items-center justify-center overflow-hidden p-5 sm:p-10 lg:min-h-0 ${isDragging ? "bg-white/[.04]" : ""}`}
+          className={`relative flex min-h-[52vh] items-center justify-center overflow-hidden p-5 sm:p-10 lg:min-h-0 ${isDragging ? "bg-red-50" : ""}`}
           onDragEnter={(event) => { event.preventDefault(); setIsDragging(true) }}
           onDragOver={(event) => event.preventDefault()}
           onDragLeave={() => setIsDragging(false)}
           onDrop={onDrop}
         >
-          <div className="absolute inset-0 opacity-30 [background-image:radial-gradient(circle_at_center,rgba(255,255,255,.09)_1px,transparent_1px)] [background-size:18px_18px]" />
+          <div className="absolute inset-0 opacity-60 [background-image:radial-gradient(circle_at_center,rgba(113,113,122,.16)_1px,transparent_1px)] [background-size:18px_18px]" />
           {source ? (
             <div className="relative flex size-full items-center justify-center">
               <div
@@ -271,26 +271,26 @@ export function ScreenshotEditor() {
                 />
               </div>
               <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
-                <button className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-white bg-white/95 px-3 py-1.5 text-xs font-medium text-black shadow-lg backdrop-blur hover:bg-zinc-200" onClick={() => setIsImageEditorOpen(true)}><ScanLine className="size-3.5" /> Crop &amp; blur</button>
-                <button className="whitespace-nowrap rounded-full border border-white/10 bg-black/65 px-3 py-1.5 text-xs text-zinc-300 backdrop-blur hover:bg-black/80" onClick={() => fileInputRef.current?.click()}>Replace image</button>
+                <button className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-zinc-200 bg-white/95 px-3 py-1.5 text-xs font-medium text-zinc-900 shadow-lg backdrop-blur hover:bg-zinc-100" onClick={() => setIsImageEditorOpen(true)}><ScanLine className="size-3.5" /> Crop &amp; blur</button>
+                <button className="whitespace-nowrap rounded-full border border-zinc-200 bg-white/90 px-3 py-1.5 text-xs text-zinc-700 shadow-lg backdrop-blur hover:bg-white" onClick={() => fileInputRef.current?.click()}>Replace image</button>
               </div>
             </div>
           ) : (
-            <button className="group relative z-10 flex w-full max-w-lg flex-col items-center rounded-[2rem] border border-dashed border-white/15 bg-white/[.025] px-8 py-16 text-center transition hover:border-white/40 hover:bg-white/[.04] focus-visible:outline-2 focus-visible:outline-white sm:py-24" onClick={() => fileInputRef.current?.click()}>
-              <span className="mb-6 grid size-16 place-items-center rounded-2xl border border-white/10 bg-white/[.04] shadow-xl transition group-hover:-translate-y-1 group-hover:border-white/30"><ImagePlus className="size-7 text-white" /></span>
+            <button className="group relative z-10 flex w-full max-w-lg flex-col items-center rounded-[2rem] border border-dashed border-zinc-300 bg-white/70 px-8 py-16 text-center shadow-sm transition hover:border-red-400 hover:bg-white focus-visible:outline-2 focus-visible:outline-red-500 sm:py-24" onClick={() => fileInputRef.current?.click()}>
+              <span className="mb-6 grid size-16 place-items-center rounded-2xl border border-red-100 bg-red-50 shadow-sm transition group-hover:-translate-y-1 group-hover:border-red-300"><ImagePlus className="size-7 text-red-600" /></span>
               <span className="text-lg font-medium">Drop your screenshot here</span>
               <span className="mt-2 text-sm text-zinc-500">Paste from clipboard or click to browse</span>
-              <span className="mt-6 flex items-center gap-2 rounded-lg bg-white/[.06] px-3 py-2 text-xs text-zinc-400"><Upload className="size-3.5" /> PNG, JPEG or WebP up to 25 MB</span>
+              <span className="mt-6 flex items-center gap-2 rounded-lg bg-zinc-100 px-3 py-2 text-xs text-zinc-500"><Upload className="size-3.5" /> PNG, JPEG or WebP up to 25 MB</span>
             </button>
           )}
-          {isDragging && <div className="pointer-events-none absolute inset-4 z-20 grid place-items-center rounded-3xl border-2 border-dashed border-white/70 bg-white/[.06] text-sm font-medium">Drop to add screenshot</div>}
+          {isDragging && <div className="pointer-events-none absolute inset-4 z-20 grid place-items-center rounded-3xl border-2 border-dashed border-red-400 bg-red-50/90 text-sm font-medium text-red-700">Drop to add screenshot</div>}
         </section>
 
-        <aside className="relative z-30 min-h-0 overflow-y-auto border-t border-white/10 bg-[#0a0a0a] lg:border-t-0 lg:border-l">
+        <aside className="relative z-30 border-t border-zinc-200 bg-white lg:min-h-0 lg:overflow-y-auto lg:border-t-0 lg:border-l">
           <div className="space-y-7 p-5 sm:p-6">
             <ControlSection title="Canvas" eyebrow={`${state.canvas.width} x ${state.canvas.height}`}>
-              <div className="grid grid-cols-5 gap-1 rounded-xl bg-black/25 p-1">
-                {ASPECT_RATIOS.map((ratio) => <button key={ratio.value} disabled={!source} className={`rounded-lg px-1 py-2 text-xs transition ${state.canvas.aspectRatio === ratio.value ? "bg-white/10 text-white shadow-sm" : "text-zinc-500 hover:text-zinc-300"}`} onClick={() => setAspectRatio(ratio.value)}>{ratio.label}</button>)}
+              <div className="grid grid-cols-5 gap-1 rounded-xl bg-zinc-100 p-1">
+                {ASPECT_RATIOS.map((ratio) => <button key={ratio.value} disabled={!source} className={`rounded-lg px-1 py-2 text-xs transition ${state.canvas.aspectRatio === ratio.value ? "bg-white text-zinc-900 shadow-sm" : "text-zinc-500 hover:text-zinc-800"}`} onClick={() => setAspectRatio(ratio.value)}>{ratio.label}</button>)}
               </div>
               <RangeControl label="Padding" value={state.canvas.padding} min={0} max={Math.round(Math.min(state.canvas.width, state.canvas.height) * 0.35)} suffix="px" disabled={!source} onChange={(padding) => update((current) => ({ ...current, canvas: { ...current.canvas, padding } }))} />
             </ControlSection>
@@ -303,16 +303,16 @@ export function ScreenshotEditor() {
                     aria-label={gradient.name}
                     title={gradient.name}
                     disabled={!source}
-                    className={`group overflow-hidden rounded-xl border text-left transition hover:-translate-y-0.5 ${state.background.gradient === gradient.value ? "border-white ring-2 ring-white/15" : "border-white/10 hover:border-white/25"}`}
+                    className={`group overflow-hidden rounded-xl border text-left transition hover:-translate-y-0.5 ${state.background.gradient === gradient.value ? "border-red-500 ring-2 ring-red-100" : "border-zinc-200 hover:border-zinc-400"}`}
                     onClick={() => update((current) => ({ ...current, background: { ...current.background, gradient: gradient.value } }))}
                   >
                     <span className="block h-11" style={{ background: gradient.value }} />
-                    <span className="block truncate bg-black/25 px-2 py-1.5 text-[9px] font-medium text-zinc-400 group-hover:text-zinc-200">{gradient.name}</span>
+                    <span className="block truncate bg-white px-2 py-1.5 text-[9px] font-medium text-zinc-500 group-hover:text-zinc-800">{gradient.name}</span>
                   </button>
                 ))}
               </div>
               <div className="space-y-2">
-                <label className="block text-xs font-medium text-zinc-400">Pattern layer</label>
+                <label className="block text-xs font-medium text-zinc-600">Pattern layer</label>
                 <div className="grid grid-cols-5 gap-1.5">
                   {PATTERNS.map((pattern) => (
                     <button
@@ -321,10 +321,10 @@ export function ScreenshotEditor() {
                       title={pattern.label}
                       aria-label={`${pattern.label} pattern`}
                       disabled={!source}
-                      className={`group relative aspect-square overflow-hidden rounded-lg border transition ${state.background.pattern === pattern.value ? "border-white bg-white/10 ring-1 ring-white/20" : "border-white/10 bg-white/[.04] hover:border-white/25"}`}
+                      className={`group relative aspect-square overflow-hidden rounded-lg border transition ${state.background.pattern === pattern.value ? "border-red-500 bg-red-50 ring-1 ring-red-100" : "border-zinc-200 bg-zinc-100 hover:border-zinc-400"}`}
                       onClick={() => update((current) => ({ ...current, background: { ...current.background, pattern: pattern.value } }))}
                     >
-                      {pattern.value === "none" ? <span className="absolute inset-0 bg-[linear-gradient(135deg,transparent_47%,rgba(255,255,255,.25)_48%,rgba(255,255,255,.25)_52%,transparent_53%)]" /> : <span className="absolute inset-0 opacity-50" style={getPatternStyle(pattern.value, 55)} />}
+                       {pattern.value === "none" ? <span className="absolute inset-0 bg-[linear-gradient(135deg,transparent_47%,rgba(113,113,122,.35)_48%,rgba(113,113,122,.35)_52%,transparent_53%)]" /> : <span className="absolute inset-0 opacity-50" style={getPatternStyle(pattern.value, 55)} />}
                     </button>
                   ))}
                 </div>
@@ -337,33 +337,35 @@ export function ScreenshotEditor() {
               <RangeControl label="Scale" value={state.screenshot.scale} min={40} max={100} suffix="%" disabled={!source} onChange={(scale) => update((current) => ({ ...current, screenshot: { ...current.screenshot, scale } }))} />
               <RangeControl label="Corner radius" value={state.screenshot.radius} min={0} max={48} suffix="px" disabled={!source} onChange={(radius) => update((current) => ({ ...current, screenshot: { ...current.screenshot, radius } }))} />
               <RangeControl label="Screenshot blur" value={state.screenshot.blur} min={0} max={40} suffix="px" disabled={!source} onChange={(blur) => update((current) => ({ ...current, screenshot: { ...current.screenshot, blur } }))} />
-              <label className="block text-xs font-medium text-zinc-400">Shadow</label>
-              <div className="grid grid-cols-4 gap-1 rounded-xl bg-black/25 p-1">
-                {(["off", "soft", "medium", "strong"] as ShadowPreset[]).map((shadow) => <button key={shadow} disabled={!source} className={`rounded-lg py-2 text-[11px] capitalize transition ${state.screenshot.shadow === shadow ? "bg-white/10 text-white" : "text-zinc-500 hover:text-zinc-300"}`} onClick={() => update((current) => ({ ...current, screenshot: { ...current.screenshot, shadow } }))}>{shadow}</button>)}
+              <label className="block text-xs font-medium text-zinc-600">Shadow</label>
+              <div className="grid grid-cols-4 gap-1 rounded-xl bg-zinc-100 p-1">
+                {(["off", "soft", "medium", "strong"] as ShadowPreset[]).map((shadow) => <button key={shadow} disabled={!source} className={`rounded-lg py-2 text-[11px] capitalize transition ${state.screenshot.shadow === shadow ? "bg-white text-zinc-900 shadow-sm" : "text-zinc-500 hover:text-zinc-800"}`} onClick={() => update((current) => ({ ...current, screenshot: { ...current.screenshot, shadow } }))}>{shadow}</button>)}
               </div>
             </ControlSection>
           </div>
         </aside>
       </div>
 
-      <footer className="flex h-10 shrink-0 items-center justify-center gap-1.5 border-t border-white/10 bg-black px-4 text-[11px] text-zinc-500">
+      <footer className="flex h-10 shrink-0 items-center justify-center gap-1.5 border-t border-zinc-200 bg-white px-4 text-[11px] text-zinc-500">
         <span>Made with</span>
-        <Heart className="size-3 fill-current text-zinc-300" aria-label="love" />
-        <span>using <span className="font-medium text-zinc-300">Vibeongo</span></span>
+        <Heart className="size-3 fill-current text-red-500" aria-label="love" />
+        <span>using <span className="font-medium text-zinc-700">Vibeongo</span></span>
+        <span aria-hidden="true">·</span>
+        <span>© {new Date().getFullYear()} Vibeongo</span>
       </footer>
 
       <input ref={fileInputRef} className="sr-only" type="file" accept="image/png,image/jpeg,image/webp" onChange={onFileChange} />
       {source && isImageEditorOpen && <ImageEditorDialog key={source.url} source={source} onClose={() => setIsImageEditorOpen(false)} onApply={applyImageEdits} />}
       <div className="sr-only" aria-live="polite">{error || status}</div>
-      {error && <button className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-xl border border-red-400/20 bg-red-950/90 px-4 py-3 text-sm text-red-100 shadow-2xl" onClick={() => setError("")}>{error}</button>}
+      {error && <button className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 shadow-xl" onClick={() => setError("")}>{error}</button>}
     </main>
   )
 }
 
 function ControlSection({ title, eyebrow, children }: { title: string; eyebrow?: string; children: React.ReactNode }) {
-  return <section className="space-y-4 border-b border-white/[.07] pb-7 last:border-0"><div className="flex items-center justify-between"><h2 className="text-xs font-semibold uppercase tracking-[.14em] text-zinc-300">{title}</h2>{eyebrow && <span className="font-mono text-[10px] text-zinc-600">{eyebrow}</span>}</div>{children}</section>
+  return <section className="space-y-4 border-b border-zinc-200 pb-7 last:border-0"><div className="flex items-center justify-between"><h2 className="text-xs font-semibold uppercase tracking-[.14em] text-zinc-700">{title}</h2>{eyebrow && <span className="font-mono text-[10px] text-zinc-400">{eyebrow}</span>}</div>{children}</section>
 }
 
 function RangeControl({ label, value, min, max, suffix, disabled, onChange }: { label: string; value: number; min: number; max: number; suffix: string; disabled: boolean; onChange: (value: number) => void }) {
-  return <label className={`block space-y-2 ${disabled ? "opacity-40" : ""}`}><span className="flex items-center justify-between text-xs font-medium text-zinc-400"><span>{label}</span><span className="font-mono text-[11px] text-zinc-500">{value}{suffix}</span></span><input className="editor-range w-full accent-white" type="range" value={value} min={min} max={max} disabled={disabled} onChange={(event) => onChange(Number(event.target.value))} /></label>
+  return <label className={`block space-y-2 ${disabled ? "opacity-40" : ""}`}><span className="flex items-center justify-between text-xs font-medium text-zinc-600"><span>{label}</span><span className="font-mono text-[11px] text-zinc-500">{value}{suffix}</span></span><input className="editor-range w-full accent-red-600" type="range" value={value} min={min} max={max} disabled={disabled} onChange={(event) => onChange(Number(event.target.value))} /></label>
 }

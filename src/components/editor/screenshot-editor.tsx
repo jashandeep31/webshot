@@ -353,7 +353,7 @@ export function ScreenshotEditor() {
       </footer>
 
       <input ref={fileInputRef} className="sr-only" type="file" accept="image/png,image/jpeg,image/webp" onChange={onFileChange} />
-      {source && isImageEditorOpen && <ImageEditorDialog source={source} onClose={() => setIsImageEditorOpen(false)} onApply={applyImageEdits} />}
+      {source && isImageEditorOpen && <ImageEditorDialog key={source.url} source={source} onClose={() => setIsImageEditorOpen(false)} onApply={applyImageEdits} />}
       <div className="sr-only" aria-live="polite">{error || status}</div>
       {error && <button className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-xl border border-red-400/20 bg-red-950/90 px-4 py-3 text-sm text-red-100 shadow-2xl" onClick={() => setError("")}>{error}</button>}
     </main>

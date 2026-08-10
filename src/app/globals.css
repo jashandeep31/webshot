@@ -172,6 +172,16 @@
   box-shadow: 0 0 0 3px rgb(255 255 255 / 12%);
 }
 
+.image-crop {
+  --rc-border-color: #fff;
+  --rc-drag-handle-bg-colour: #fff;
+  --rc-focus-color: #fff;
+}
+
+.image-crop .ReactCrop__crop-mask {
+  fill: rgb(0 0 0 / 68%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     scroll-behavior: auto !important;
